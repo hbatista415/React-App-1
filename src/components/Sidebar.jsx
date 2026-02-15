@@ -1,52 +1,63 @@
-import { useState, useCallback } from "react"
-/**
- * Renders an array of strings passed in that can be filtered and added to as an
- * unordered list.
- * @returns Component
- */
-export default function Sidebar() {
-  let [newMenuItem, setNewMenuItem] = useState("")
-  // TODO: 2 Using a state hook, maintain the current menu items as an array state.
-  // let [menuItems, setMenuItems] = useState(initialMenuItems)
-  let [filter, setFilter] = useState("")
-  // Adds a single string passed in as parameter to the state element
-  // "menuItems" that holds the set of current menu items.
-  let addMenuItem = useCallback(() => {
-    console.log("Added menu item")
-    //   // TODO: 3. Add a new menu item to the correct variable associated with this class.
-    //   // This involves adding a parameter and changing a class instance variable (props).
-    //   setMenuItems([item, ...menuItems])
-  }, [])
+import React, { useState } from "react";
 
-  // TODO: 4. Display ONLY the menu items that contain the filter element value
-  // "term" in them. Each menu item should be an unordered list item wrapped in an unordered list (ul) element.
+const Sidebar = ({ initialMenuItems }) => {
+  // Maintain the menu state for the Sidebar component
+  // TODO 2: Maintain Menu State
+  const [menuItems, setMenuItems] = useState(initialMenuItems);
 
-  // TODO: 1 Render inside the outer div an unordered list of the menu items, with each string in the array
-  // its own item.
+  // State for adding new menu items
+  // TODO 3: Implement AddMenuItem Callback
+  const [newItem, setNewItem] = useState("");
+
+  // State for filtering menu items
+  // TODO 4: Filter Menu Items
+  const [filterText, setFilterText] = useState("");
+
+  // Function to add a new item to the menu
+  // TODO 3: Implement AddMenuItem Callback
+  const addMenuItem = () => {
+    if (newItem.trim() !== "") {
+      setMenuItems([...menuItems, newItem.trim()]);
+      setNewItem("");
+    }
+  };
+
+  // Filter the menu items based on the filter input
+  // TODO 4: Filter Menu Items
+  const filteredItems = menuItems.filter(item =>
+    new RegExp(filterText, "i").test(item)
+  );
+
   return (
-    <div>
+    <div className="sidebar">
+      <h2>Menu</h2>
+
+      {/* Input for adding new menu items */}
       <input
         type="text"
-        id="newMenuItemValue"
-        value={newMenuItem}
-        onChange={(event) => setNewMenuItem(event.target.value)}
-      ></input>
-      <br />
-      <button
-        onClick={() => {
-          /* TODO: 3 */
-        }}
-      >
-        Add Item
-      </button>
-      <br />
+        placeholder="Add menu item"
+        value={newItem}
+        onChange={(e) => setNewItem(e.target.value)}
+      />
+      <button onClick={addMenuItem}>Add</button>
+
+      {/* Input for filtering menu items */}
       <input
-        id="filter"
         type="text"
-        value={filter}
-        onChange={(event) => setFilter(event.target.value)}
-        placeholder="Filter by..."
-      ></input>
+        placeholder="Filter menu items"
+        value={filterText}
+        onChange={(e) => setFilterText(e.target.value)}
+      />
+
+      {/* Render the menu items */}
+      {/* TODO 1: Render Menu Items */}
+      <ul>
+        {filteredItems.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
     </div>
-  )
-}
+  );
+};
+
+export default Sidebar;
